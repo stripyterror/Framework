@@ -4,6 +4,11 @@
 // Include GLFW
 #include <GLFW/glfw3.h>
 
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
+
 #include <common/config.h>
 #include <common/renderer.h>
 #include <common/camera.h>
@@ -44,6 +49,14 @@ int main( void )
 	} // Check if the ESC key was pressed or the window was closed
 	while( glfwGetKey(renderer.window(), GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
 		   glfwWindowShouldClose(renderer.window()) == 0 );
+
+	fstream MyFile;
+	MyFile.open("test.txt", fstream::app);
+	if (MyFile.is_open())
+	{
+		MyFile << pencils;
+		MyFile.close();
+	}
 
 	delete scene;
 
