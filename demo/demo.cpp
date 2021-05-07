@@ -17,6 +17,16 @@ using namespace std;
 
 int main( void )
 {
+	float pPositionXS;
+	float pPositionYS;
+	float pPositionXL;
+	float pPositionYL;
+
+	fstream MyFile;
+	std::string filename;
+	cout << "What do you want your save file to be called? (In case one already exits input file name.)" << endl;
+	std::cin >> filename;
+
 	Renderer renderer;
 
 	Scene* scene = new Scene();
@@ -28,6 +38,30 @@ int main( void )
 
 
 	scene->addSprite(pencils);
+
+	std::ifstream file(filename);
+
+	std::vector<int> pos ;
+
+	int input;
+	while (file >> input)
+	{
+		pos.push_back(input);
+	}
+
+	MyFile.open(filename.c_str());
+	if (MyFile.is_open())
+	{
+		pPositionXL = pos[0];
+		pPositionYL = pos[1];
+		pencils->position = glm::vec3(pPositionXL, pPositionYL, 0.0f);
+		MyFile.close();
+	}
+
+	for (int test : pos)
+	{
+		std::cout << test << std::endl;
+	}
 
 	do {
 		// get deltaTime and update camera
@@ -50,13 +84,20 @@ int main( void )
 	while( glfwGetKey(renderer.window(), GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
 		   glfwWindowShouldClose(renderer.window()) == 0 );
 
-	fstream MyFile;
-	MyFile.open("test.txt", fstream::app);
+	MyFile.open(filename.c_str(), fstream::out | fstream::trunc);
 	if (MyFile.is_open())
 	{
-		MyFile << pencils;
+		pPositionXS = pencils->position.x;
+		pPositionYS = pencils->position.y;
+
+		MyFile << pPositionXS << endl;
+		MyFile << pPositionYS << endl;
 		MyFile.close();
 	}
+	else
+		cout << "Error! Something went wrong.\n";
+
+
 
 	delete scene;
 
